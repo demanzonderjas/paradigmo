@@ -7,27 +7,30 @@ import "firebase/compat/database";
 
 export class Database {
 	firebase: any = null;
+	database: any = null;
 	ui: any = null;
 	user: any = null;
 
 	constructor() {
 		this.firebase = firebaseApp;
+		this.database = firebaseApp.database();
 		this.listenForUser();
 		makeAutoObservable(this, {
 			initUI: action.bound,
+			addNote: action.bound,
 		});
 	}
 
 	async listenForUser() {
 		firebase.auth().onAuthStateChanged((user: any) => {
-			if (user) {
-				this.user = user;
-			} else {
-			}
+			this.user = user;
 		});
 	}
 
 	async initUI() {
+		if (this.user) {
+			return;
+		}
 		const firebaseui = await import("firebaseui");
 		this.ui =
 			firebaseui.auth.AuthUI.getInstance() ||
@@ -52,7 +55,9 @@ export class Database {
 		});
 	}
 
-	showAuth() {}
+	addNote(note: any) {
+		return this.database.ref(`notes/${this.user.uid}`).push(note);
+	}
 }
 
 export const DatabaseContext = createContext(null);
