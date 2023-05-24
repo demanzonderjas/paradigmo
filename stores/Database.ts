@@ -1,25 +1,27 @@
-import { makeAutoObservable } from "mobx";
+import { action, makeAutoObservable } from "mobx";
 import { firebaseApp } from "../config/database";
 import { createContext } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import "firebase/compat/database";
 
 export class Database {
 	firebase: any = null;
 	ui: any = null;
+	user: any = null;
 
 	constructor() {
 		this.firebase = firebaseApp;
 		this.listenForUser();
-		this.initUI();
-		makeAutoObservable(this);
+		makeAutoObservable(this, {
+			initUI: action.bound,
+		});
 	}
 
 	async listenForUser() {
 		firebase.auth().onAuthStateChanged((user: any) => {
 			if (user) {
-				var uid = user.uid;
-				console.log(user);
+				this.user = user;
 			} else {
 			}
 		});
@@ -28,7 +30,8 @@ export class Database {
 	async initUI() {
 		const firebaseui = await import("firebaseui");
 		this.ui =
-			firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
+			firebaseui.auth.AuthUI.getInstance() ||
+			new firebaseui.auth.AuthUI(this.firebase.auth());
 		this.ui.start("#firebaseui-auth-container", {
 			callbacks: {
 				signInSuccessWithAuthResult: function () {
