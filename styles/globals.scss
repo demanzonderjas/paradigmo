@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./variables.scss";
+
+body {
+	background: $primary-color;
+	color: $primary-text-color;
+	font-size: 18px;
+}
+
+h1 {
+	font-size: 4em;
+}
