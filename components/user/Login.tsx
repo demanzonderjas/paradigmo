@@ -10,7 +10,11 @@ export const Login = observer(() => {
 	}, []);
 
 	if (user) {
-		return null;
+		return (
+			<div className="profile mt-10">
+				<h2>{user.email}</h2>
+			</div>
+		);
 	}
 
 	return (

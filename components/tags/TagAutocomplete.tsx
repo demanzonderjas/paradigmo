@@ -2,23 +2,16 @@ import { useNotes } from "@/hooks/useNotes";
 import { TTag } from "@/typings/notes";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/form/Button";
+import { useTagList } from "@/hooks/useTagList";
 
 export const TagAutocomplete: React.FC<{ addTag: Function }> = ({ addTag }) => {
 	const [tag, setTag] = useState<TTag>({ name: "", uid: null });
-	const [tagList, setTagList] = useState<TTag[]>([]);
-	const { getTagList } = useNotes();
+	const { tagList } = useTagList();
 
 	const addAndClear = (tag: TTag) => {
 		addTag(tag);
 		setTag({ name: "", uid: null });
 	};
-
-	useEffect(() => {
-		(async () => {
-			const tagList = await getTagList();
-			setTagList(tagList);
-		})();
-	}, []);
 
 	return (
 		<div className="tag flex items-center justify-between gap-10 w-full">
