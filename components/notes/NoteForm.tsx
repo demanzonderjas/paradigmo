@@ -3,26 +3,45 @@ import { useNotes } from "../../hooks/useNotes";
 
 export function NoteForm() {
 	const [note, setNote] = useState("");
+	const [tags, setTags] = useState([""]);
 	const { addNote } = useNotes();
 
-	const handleSubmit = (e: FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		addNote({ note });
+		await addNote({ note, tags });
+		setNote("");
+	};
+
+	const setTag = (index: number, value: string) => {
+		const clone = [...tags];
+		clone[index] = value;
+		setTags(clone);
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<div className="fields flex gap-5 items-center">
-				<textarea
-					className="p-4 text-xl text-black flex-auto w-full"
-					value={note}
-					onChange={(e) => setNote(e.target.value)}
-					style={{ minHeight: "200px", minWidth: "50%" }}
-				/>
-				<button type="submit" className="p-4 border-2 border-white">
-					Add
-				</button>
-			</div>
+		<form
+			onSubmit={handleSubmit}
+			className="flex flex-auto gap-5"
+			style={{ maxWidth: "500px", maxHeight: "400px" }}
+		>
+			<textarea
+				className="p-4 text-xl text-black flex-auto w-full"
+				value={note}
+				onChange={(e) => setNote(e.target.value)}
+			/>
+			{tags.map((tag, index) => (
+				<div className="tag" key={index}>
+					<input
+						className="p-4 text-xl text-black flex-auto w-full"
+						type="text"
+						value={tag}
+						onChange={(e) => setTag(index, e.target.value)}
+					/>
+				</div>
+			))}
+			<button type="submit" className="p-4 border-2 border-white">
+				Add
+			</button>
 		</form>
 	);
 }
