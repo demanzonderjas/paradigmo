@@ -1,6 +1,5 @@
-import { useNotes } from "@/hooks/useNotes";
 import { TTag } from "@/typings/notes";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/form/Button";
 import { useTagList } from "@/hooks/useTagList";
 

@@ -5,7 +5,7 @@ export function useUser() {
 	const database: Database = useContext(DatabaseContext);
 
 	return {
-		user: database.user,
-		initUI: database.initUI,
+		user: database.auth.user,
+		initUI: database.auth.initUI,
 	};
 }

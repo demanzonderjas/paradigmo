@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			<main
 				className={`flex min-h-screen flex-col items-center justify-between p-24 ${mainFont.className}`}
 			>
-				<Component {...pageProps} />;
+				<Component {...pageProps} />
 			</main>
 		</DatabaseProvider>
 	);
