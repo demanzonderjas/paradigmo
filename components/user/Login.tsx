@@ -13,10 +13,8 @@ export const Login = observer(() => {
 		return null;
 	}
 
-	console.log("userrr", user);
-
 	return (
-		<div>
+		<div className="mt-10">
 			<div id="firebaseui-auth-container"></div>
 			<div id="loader"></div>
 		</div>

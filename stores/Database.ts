@@ -19,7 +19,8 @@ export class Database {
 		makeAutoObservable(this, {
 			initUI: action.bound,
 			addNote: action.bound,
-			addTag: action.bound
+			addTag: action.bound,
+			getTagList: action.bound
 		});
 	}
 
@@ -68,6 +69,11 @@ export class Database {
 	async addTag(name: string): Promise<TTag> {
 		const uid = await this.database.ref("tags").push({name}).key;
 		return { name, uid }
+	}
+
+	async getTagList(): Promise<TTag[]> {
+		const tags: { [K in string]: TTag } = await this.database.ref("tags").once("value").then((s: any) => s.val());
+		return Object.keys(tags).map((uid) => ({ uid, name: tags[uid].name }));
 	}
 }
 

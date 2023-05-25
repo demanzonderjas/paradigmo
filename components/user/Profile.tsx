@@ -9,9 +9,7 @@ export const Profile = observer(() => {
 	}
 
 	return (
-		<div className="profile">
-			<div id="firebaseui-auth-container"></div>
-			<div id="loader"></div>
+		<div className="profile mt-10">
 			<h2>{user.email}</h2>
 		</div>
 	);

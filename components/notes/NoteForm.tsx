@@ -1,45 +1,69 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNotes } from "@/hooks/useNotes";
 import { TTag } from "@/typings/notes";
 import { GrowingTextbox } from "./GrowingTextbox";
+import { Button } from "../form/Button";
 
 export function NoteForm() {
 	const [note, setNote] = useState("");
 	const [tags, setTags] = useState<TTag[]>([]);
-	const [tag, setTag] = useState("");
-	const { addNote, addTag } = useNotes();
+	const [tagList, setTagList] = useState<TTag[]>([]);
+	const [tag, setTag] = useState<TTag>({ name: "", uid: null });
+	const { addNote, addTag, getTagList } = useNotes();
 
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
+	useEffect(() => {
+		(async () => {
+			const tagList = await getTagList();
+			setTagList(tagList);
+		})();
+	}, []);
+
+	const handleSubmit = async () => {
 		await addNote({ text: note, tags });
 		setNote("");
+		setTags([]);
 	};
 
-	const addTagToNote = async (e: FormEvent, name: string) => {
-		e.preventDefault();
-		const tag = await addTag(name);
+	const addTagToNote = async ({ name, uid }: TTag) => {
+		const tag = uid ? { name, uid } : await addTag(name);
 		setTags([...tags, tag]);
-		setTag("");
+		setTag({ name: "", uid: null });
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="flex flex-auto flex-col gap-5 max-w-[50%]">
+		<form className="flex flex-auto flex-col gap-5 max-w-2xl px-4">
 			<div className="fields flex flex-start flex-auto justify-center gap-5 flex-wrap">
 				<GrowingTextbox value={note} setValue={setNote} />
-				<div className="tag flex items-center gap-10">
-					<input
-						className="p-2 text-md text-black flex-auto w-full"
-						type="text"
-						value={tag}
-						onChange={(e) => setTag(e.target.value)}
-						style={{ height: "50px" }}
-					/>
-					<button
-						className="p-4 border-2 border-white flex-none"
-						onClick={(e) => addTagToNote(e, tag)}
-					>
-						Add tag
-					</button>
+				<div className="tag flex items-center justify-between gap-10 w-full">
+					<div className="tag-autocomplete relative w-full flex-auto">
+						<input
+							className="p-2 text-md text-black flex-auto w-full"
+							type="text"
+							value={tag.name}
+							onChange={(e) => setTag({ name: e.target.value, uid: tag.uid })}
+							style={{ height: "50px" }}
+						/>
+						<div className="autocomplete absolute left-0 w-full bg-white shadow-sm">
+							{tagList
+								.filter(() => !!tag.name)
+								.filter((listItem) =>
+									listItem.name
+										.toString()
+										.toLowerCase()
+										.match(tag.name.toLowerCase())
+								)
+								.map((listItem) => (
+									<div
+										className="p-2 tag border-b-black border-2 text-black hover:text-white hover:bg-black cursor-pointer"
+										key={listItem.uid}
+										onClick={() => addTagToNote(listItem)}
+									>
+										{listItem.name}
+									</div>
+								))}
+						</div>
+					</div>
+					<Button text="Add tag" onClick={() => addTagToNote(tag)} />
 				</div>
 				<div className="tags flex gap-5 flex-wrap w-full">
 					{tags.map((tag, index) => (
@@ -49,9 +73,7 @@ export function NoteForm() {
 					))}
 				</div>
 			</div>
-			<button type="submit" className="p-4 border-2 border-white">
-				Add
-			</button>
+			<Button text="Add note" onClick={handleSubmit} />
 		</form>
 	);
 }
