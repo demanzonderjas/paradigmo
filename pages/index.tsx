@@ -10,7 +10,7 @@ export default function Home() {
 		<main
 			className={`flex min-h-screen flex-col items-center justify-between p-24 ${mainFont.className}`}
 		>
-			<h1>Welcome</h1>
+			<h1>Notes</h1>
 			<div className="content flex flex-auto w-screen justify-center">
 				<NoteForm />
 			</div>

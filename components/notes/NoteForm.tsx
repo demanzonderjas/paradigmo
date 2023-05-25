@@ -1,44 +1,54 @@
-import { FormEvent, useState } from "react";
-import { useNotes } from "../../hooks/useNotes";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { useNotes } from "@/hooks/useNotes";
+import { TTag } from "@/typings/notes";
+import { GrowingTextbox } from "./GrowingTextbox";
 
 export function NoteForm() {
 	const [note, setNote] = useState("");
-	const [tags, setTags] = useState([""]);
-	const { addNote } = useNotes();
+	const [tags, setTags] = useState<TTag[]>([]);
+	const [tag, setTag] = useState("");
+	const { addNote, addTag } = useNotes();
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		await addNote({ note, tags });
+		await addNote({ text: note, tags });
 		setNote("");
 	};
 
-	const setTag = (index: number, value: string) => {
-		const clone = [...tags];
-		clone[index] = value;
-		setTags(clone);
+	const addTagToNote = async (e: FormEvent, name: string) => {
+		e.preventDefault();
+		const tag = await addTag(name);
+		setTags([...tags, tag]);
+		setTag("");
 	};
 
 	return (
-		<form
-			onSubmit={handleSubmit}
-			className="flex flex-auto gap-5"
-			style={{ maxWidth: "500px", maxHeight: "400px" }}
-		>
-			<textarea
-				className="p-4 text-xl text-black flex-auto w-full"
-				value={note}
-				onChange={(e) => setNote(e.target.value)}
-			/>
-			{tags.map((tag, index) => (
-				<div className="tag" key={index}>
+		<form onSubmit={handleSubmit} className="flex flex-auto flex-col gap-5 max-w-[50%]">
+			<div className="fields flex flex-start flex-auto justify-center gap-5 flex-wrap">
+				<GrowingTextbox value={note} setValue={setNote} />
+				<div className="tag flex items-center gap-10">
 					<input
-						className="p-4 text-xl text-black flex-auto w-full"
+						className="p-2 text-md text-black flex-auto w-full"
 						type="text"
 						value={tag}
-						onChange={(e) => setTag(index, e.target.value)}
+						onChange={(e) => setTag(e.target.value)}
+						style={{ height: "50px" }}
 					/>
+					<button
+						className="p-4 border-2 border-white flex-none"
+						onClick={(e) => addTagToNote(e, tag)}
+					>
+						Add tag
+					</button>
 				</div>
-			))}
+				<div className="tags flex gap-5 flex-wrap w-full">
+					{tags.map((tag, index) => (
+						<div className="tag" key={index}>
+							<span className="p-4 bg-white text-black">{tag.name}</span>
+						</div>
+					))}
+				</div>
+			</div>
 			<button type="submit" className="p-4 border-2 border-white">
 				Add
 			</button>
