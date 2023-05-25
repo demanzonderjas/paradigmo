@@ -7,7 +7,7 @@ export default function Tags() {
 
 	return (
 		<Page title="Tags">
-			<TagList tags={tagList} />
+			<TagList tags={tagList} hasLinks={true} />
 		</Page>
 	);
 }

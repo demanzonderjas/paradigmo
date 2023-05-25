@@ -7,6 +7,7 @@ export function useNotes() {
 	return {
 		addNote: database.addNote,
 		addTag: database.addTag,
-		getTagList: database.getTagList
+		getTagList: database.getTagList,
+		getTag: database.getTag
 	};
 }
