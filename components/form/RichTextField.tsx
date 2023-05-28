@@ -14,14 +14,13 @@ const joditConfig = {
 	width: "100%",
 };
 
-export const RichTextField: React.FC<{ value: string; setValue: Function; height: number }> = ({
+export const RichTextField: React.FC<{ value: string; setValue: Function }> = ({
 	value,
 	setValue,
-	height,
 }) => {
 	const editor = useRef(null);
 
-	const config = useMemo(() => ({ ...joditConfig }), []);
+	const config = useMemo(() => ({ ...joditConfig, height: "275px" }), []);
 
 	return (
 		<div className="RichTextField w-full">

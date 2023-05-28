@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNotes } from "@/hooks/useNotes";
 import { TNote, TTag } from "@/typings/notes";
-import { GrowingTextbox } from "./GrowingTextbox";
 import { Button } from "../form/Button";
 import { TagAutocomplete } from "../tags/TagAutocomplete";
 import { TagList } from "../tags/TagList";
 import { useRouter } from "next/router";
+import { RichTextField } from "../form/RichTextField";
 
-export const NoteForm: React.FC<{ seed: TNote }> = ({ seed }) => {
+export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 	const [note, setNote] = useState("");
 	const [source, setSource] = useState("");
 	const [tags, setTags] = useState<TTag[]>([]);
@@ -47,7 +47,7 @@ export const NoteForm: React.FC<{ seed: TNote }> = ({ seed }) => {
 	return (
 		<form className="flex flex-auto flex-col gap-5 max-w-2xl px-4">
 			<div className="fields text-black flex flex-start flex-auto justify-center gap-5 flex-wrap">
-				<GrowingTextbox value={note} setValue={setNote} />
+				<RichTextField value={note} setValue={setNote} />
 				<input
 					className="w-full p-2"
 					placeholder="source"

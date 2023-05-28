@@ -12,5 +12,6 @@ export function useNotes() {
 		getNotesPerTag: database.getNotesPerTag,
 		getNote: database.getNote,
 		updateNote: database.updateNote,
+		getMine: database.getMine,
 	};
 }

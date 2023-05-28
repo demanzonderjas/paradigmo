@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<DatabaseProvider store={databaseStore}>
 			<main
-				className={`flex min-h-screen flex-col items-center justify-between p-24 ${mainFont.className}`}
+				className={`flex min-h-screen flex-col items-center justify-between p-8 ${mainFont.className}`}
 			>
 				<Component {...pageProps} />
 			</main>

@@ -23,6 +23,7 @@ export class Database {
 			getNotesPerTag: action.bound,
 			getNote: action.bound,
 			updateNote: action.bound,
+			getMine: action.bound,
 		});
 	}
 
@@ -100,6 +101,13 @@ export class Database {
 		await Promise.all(
 			note.tags.map((tag) => this.database.ref(`tags_notes/${tag.uid}/${seed.uid}`).set(true))
 		);
+	}
+
+	getMine() {
+		return this.database
+			.ref(`notes/${this.auth.user.uid}`)
+			.once("value")
+			.then((s: any) => s.val());
 	}
 }
 
