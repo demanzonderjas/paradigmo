@@ -7,7 +7,9 @@ export default function Tags() {
 
 	return (
 		<Page title="Tags">
-			<TagList tags={tagList} hasLinks={true} />
+			<div className="flex justify-center">
+				<TagList tags={tagList} hasLinks={true} />
+			</div>
 		</Page>
 	);
 }

@@ -19,30 +19,55 @@ export class Database {
 			addNote: action.bound,
 			addTag: action.bound,
 			getTagList: action.bound,
-			getTag: action.bound
+			getTag: action.bound,
+			getNotesPerTag: action.bound,
 		});
 	}
 
 	async addNote(note: TNote) {
 		const noteUid = await this.database.ref(`notes/${this.auth.user.uid}`).push(note).key;
-		if(!note.tags) {
+		if (!note.tags) {
 			return;
-		} 
-		return Promise.all(note.tags.map((tag) => this.database.ref(`tags_notes/${tag.uid}/${noteUid}`).set(true)))
+		}
+		return Promise.all(
+			note.tags.map((tag) => this.database.ref(`tags_notes/${tag.uid}/${noteUid}`).set(true))
+		);
 	}
 
 	async addTag(name: string): Promise<TTag> {
-		const uid = await this.database.ref("tags").push({name}).key;
-		return { name, uid }
+		const uid = await this.database.ref("tags").push({ name }).key;
+		return { name, uid };
 	}
 
 	async getTagList(): Promise<TTag[]> {
-		const tags: { [K in string]: TTag } = await this.database.ref("tags").once("value").then((s: any) => s.val());
+		const tags: { [K in string]: TTag } = await this.database
+			.ref("tags")
+			.once("value")
+			.then((s: any) => s.val());
 		return Object.keys(tags).map((uid) => ({ uid, name: tags[uid].name }));
 	}
 
 	async getTag(uid: string): Promise<TTag> {
-		return this.database.ref(`tags/${uid}`).once("value").then((s: any) => s.val());
+		return this.database
+			.ref(`tags/${uid}`)
+			.once("value")
+			.then((s: any) => s.val());
+	}
+
+	async getNotesPerTag(tagUid: string) {
+		const noteUids = await this.database
+			.ref(`tags_notes/${tagUid}`)
+			.once("value")
+			.then((s: any) => s.val());
+		const notes = await Promise.all(
+			Object.keys(noteUids || {}).map((noteUid) =>
+				this.database
+					.ref(`notes/${this.auth.user.uid}/${noteUid}`)
+					.once("value")
+					.then((s: any) => ({ ...s.val(), uid: noteUid }))
+			)
+		);
+		return notes;
 	}
 }
 

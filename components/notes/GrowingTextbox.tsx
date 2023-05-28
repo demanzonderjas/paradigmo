@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { RichTextField } from "../form/RichTextField";
 
 export const GrowingTextbox: React.FC<{ value: string; setValue: Function }> = ({
 	value,
@@ -20,13 +21,5 @@ export const GrowingTextbox: React.FC<{ value: string; setValue: Function }> = (
 		setTextAreaSize(Math.max(targetSize, MINIMAL_TEXTAREA_SIZE));
 	}, [textAreaRef, value]);
 
-	return (
-		<textarea
-			ref={textAreaRef}
-			className="p-4 text-xl text-black flex-auto w-full"
-			value={value}
-			onChange={(e) => setValue(e.target.value)}
-			style={{ height: `${textAreaSize}px` }}
-		/>
-	);
+	return <RichTextField value={value} setValue={setValue} height={textAreaSize} />;
 };
