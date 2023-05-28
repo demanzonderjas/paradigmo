@@ -25,8 +25,15 @@ export const NoteForm: React.FC<{ seed: TNote }> = ({ seed }) => {
 	};
 
 	const addTagToNote = async ({ name, uid }: TTag) => {
+		if (tags.some((tag) => tag.uid === uid)) {
+			return;
+		}
 		const tag = uid ? { name, uid } : await addTag(name);
 		setTags([...tags, tag]);
+	};
+
+	const removeTag = (uid: string) => {
+		setTags(tags.filter((t) => t.uid !== uid));
 	};
 
 	useEffect(() => {
@@ -49,7 +56,7 @@ export const NoteForm: React.FC<{ seed: TNote }> = ({ seed }) => {
 					onChange={(e) => setSource(e.target.value)}
 				/>
 				<TagAutocomplete addTag={addTagToNote} />
-				<TagList tags={tags} />
+				<TagList tags={tags} removeTag={removeTag} />
 			</div>
 			<Button text={seed ? "Update note" : "Add note"} onClick={handleSubmit} />
 		</form>

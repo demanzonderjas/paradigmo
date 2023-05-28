@@ -6,8 +6,8 @@ export const Note: React.FC<TNote> = (note) => {
 
 	return (
 		<div
-			className="flex flex-col items-stretch text-black p-4 cursor-pointer transition-transform hover:scale-110"
-			style={{ maxWidth: "600px", minWidth: "150px" }}
+			className="flex flex-col items-stretch text-black p-4 cursor-pointer transition-transform hover:scale-105"
+			style={{ maxWidth: "600px", minWidth: "250px" }}
 			onClick={() => push(`/notes/edit/${note.uid}`)}
 		>
 			<div className="text bg-white p-4" dangerouslySetInnerHTML={{ __html: note.text }} />

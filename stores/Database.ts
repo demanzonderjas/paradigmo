@@ -79,8 +79,6 @@ export class Database {
 			.once("value")
 			.then((s: any) => s.val());
 
-		console.log("owner", ownerUid);
-
 		return this.database
 			.ref(`notes/${ownerUid}/${uid}`)
 			.once("value")
@@ -90,7 +88,7 @@ export class Database {
 	async updateNote(seed: TNote, note: TNote) {
 		await this.database.ref(`notes/${this.auth.user.uid}/${seed.uid}`).set(note);
 
-		const tagsToDelete = seed.tags.filter((_tag) =>
+		const tagsToDelete = (seed.tags || []).filter((_tag) =>
 			note.tags.every((tag) => tag.uid !== _tag.uid)
 		);
 
