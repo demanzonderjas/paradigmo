@@ -21,17 +21,21 @@ export class Database {
 			getTagList: action.bound,
 			getTag: action.bound,
 			getNotesPerTag: action.bound,
+			getNote: action.bound,
+			updateNote: action.bound,
 		});
 	}
 
 	async addNote(note: TNote) {
-		const noteUid = await this.database.ref(`notes/${this.auth.user.uid}`).push(note).key;
+		const noteUid = await this.database.ref(`notes_users`).push(this.auth.user.uid).key;
+		await this.database.ref(`notes/${this.auth.user.uid}/${noteUid}`).set(note);
 		if (!note.tags) {
 			return;
 		}
-		return Promise.all(
+		await Promise.all(
 			note.tags.map((tag) => this.database.ref(`tags_notes/${tag.uid}/${noteUid}`).set(true))
 		);
+		return noteUid;
 	}
 
 	async addTag(name: string): Promise<TTag> {
@@ -44,7 +48,7 @@ export class Database {
 			.ref("tags")
 			.once("value")
 			.then((s: any) => s.val());
-		return Object.keys(tags).map((uid) => ({ uid, name: tags[uid].name }));
+		return Object.keys(tags || {}).map((uid) => ({ uid, name: tags[uid].name }));
 	}
 
 	async getTag(uid: string): Promise<TTag> {
@@ -68,6 +72,36 @@ export class Database {
 			)
 		);
 		return notes;
+	}
+	async getNote(uid: string): Promise<TNote> {
+		const ownerUid = await this.database
+			.ref(`notes_users/${uid}`)
+			.once("value")
+			.then((s: any) => s.val());
+
+		console.log("owner", ownerUid);
+
+		return this.database
+			.ref(`notes/${ownerUid}/${uid}`)
+			.once("value")
+			.then((s: any) => ({ ...s.val(), uid }));
+	}
+
+	async updateNote(seed: TNote, note: TNote) {
+		await this.database.ref(`notes/${this.auth.user.uid}/${seed.uid}`).set(note);
+
+		const tagsToDelete = seed.tags.filter((_tag) =>
+			note.tags.every((tag) => tag.uid !== _tag.uid)
+		);
+
+		await Promise.all(
+			tagsToDelete.map((tag) =>
+				this.database.ref(`tags_notes/${tag.uid}/${seed.uid}`).remove()
+			)
+		);
+		await Promise.all(
+			note.tags.map((tag) => this.database.ref(`tags_notes/${tag.uid}/${seed.uid}`).set(true))
+		);
 	}
 }
 

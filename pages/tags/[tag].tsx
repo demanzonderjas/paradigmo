@@ -1,4 +1,5 @@
 import { Page } from "@/components/layout/Page";
+import { Note } from "@/components/notes/Note";
 import { useNotes } from "@/hooks/useNotes";
 import { TNote, TTag } from "@/typings/notes";
 import { useRouter } from "next/router";
@@ -27,21 +28,7 @@ export default function Tag() {
 		<Page title={tag.name}>
 			<div className="notes flex flex-wrap justify-center gap-10">
 				{notes.map((note) => (
-					<div
-						className="flex flex-col items-stretch text-black p-4"
-						key={note.uid}
-						style={{ maxWidth: "600px" }}
-					>
-						<div
-							className="text bg-white p-4"
-							dangerouslySetInnerHTML={{ __html: note.text }}
-						/>
-						{note.source && (
-							<div className="source bg-orange text-white text-xs px-4 py-2">
-								{note.source}
-							</div>
-						)}
-					</div>
+					<Note key={note.uid} {...note} />
 				))}
 			</div>
 		</Page>

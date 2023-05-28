@@ -9,6 +9,8 @@ export function useNotes() {
 		addTag: database.addTag,
 		getTagList: database.getTagList,
 		getTag: database.getTag,
-		getNotesPerTag: database.getNotesPerTag
+		getNotesPerTag: database.getNotesPerTag,
+		getNote: database.getNote,
+		updateNote: database.updateNote,
 	};
 }

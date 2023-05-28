@@ -1,5 +1,6 @@
-import JoditEditor from "jodit-react";
-import { useRef } from "react";
+import dynamic from "next/dynamic";
+import { useMemo, useRef } from "react";
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const listOfButtons = "bold,italic,underline,ul,ol,indent,outdent,left,link,source";
 
@@ -20,10 +21,7 @@ export const RichTextField: React.FC<{ value: string; setValue: Function; height
 }) => {
 	const editor = useRef(null);
 
-	const config = {
-		...joditConfig,
-		height: `${height}px`,
-	};
+	const config = useMemo(() => ({ ...joditConfig }), []);
 
 	return (
 		<div className="RichTextField w-full">

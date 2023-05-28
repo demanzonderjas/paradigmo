@@ -1,28 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNotes } from "@/hooks/useNotes";
-import { TTag } from "@/typings/notes";
+import { TNote, TTag } from "@/typings/notes";
 import { GrowingTextbox } from "./GrowingTextbox";
 import { Button } from "../form/Button";
 import { TagAutocomplete } from "../tags/TagAutocomplete";
 import { TagList } from "../tags/TagList";
+import { useRouter } from "next/router";
 
-export function NoteForm() {
+export const NoteForm: React.FC<{ seed: TNote }> = ({ seed }) => {
 	const [note, setNote] = useState("");
 	const [source, setSource] = useState("");
 	const [tags, setTags] = useState<TTag[]>([]);
-	const { addNote, addTag } = useNotes();
+	const { addNote, updateNote, addTag } = useNotes();
+	const { push } = useRouter();
 
 	const handleSubmit = async () => {
-		await addNote({ text: note, tags, source });
-		setNote("");
-		setSource("");
-		setTags([]);
+		if (seed) {
+			await updateNote(seed, { text: note, tags, source });
+			push(`/notes/view/${seed.uid}`);
+		} else {
+			const uid = await addNote({ text: note, tags, source });
+			push(`/notes/view/${uid}`);
+		}
 	};
 
 	const addTagToNote = async ({ name, uid }: TTag) => {
 		const tag = uid ? { name, uid } : await addTag(name);
 		setTags([...tags, tag]);
 	};
+
+	useEffect(() => {
+		if (seed) {
+			setNote(seed.text || "");
+			setSource(seed.source || "");
+			setTags(seed.tags || []);
+		}
+	}, [seed]);
 
 	return (
 		<form className="flex flex-auto flex-col gap-5 max-w-2xl px-4">
@@ -38,7 +51,7 @@ export function NoteForm() {
 				<TagAutocomplete addTag={addTagToNote} />
 				<TagList tags={tags} />
 			</div>
-			<Button text="Add note" onClick={handleSubmit} />
+			<Button text={seed ? "Update note" : "Add note"} onClick={handleSubmit} />
 		</form>
 	);
-}
+};
