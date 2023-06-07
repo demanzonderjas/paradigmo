@@ -21,7 +21,7 @@ export const Mine: React.FC = observer(() => {
 	}, [user]);
 
 	return (
-		<div className="notes flex flex-wrap justify-center gap-10">
+		<div className="notes flex flex-wrap justify-center gap-2">
 			{notes.map((note) => (
 				<Note key={note.uid} {...note} />
 			))}

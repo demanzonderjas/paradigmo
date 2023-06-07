@@ -26,7 +26,7 @@ export default function Tag() {
 
 	return (
 		<Page title={tag.name}>
-			<div className="notes flex flex-wrap justify-center gap-10">
+			<div className="notes flex flex-wrap justify-center gap-2">
 				{notes.map((note) => (
 					<Note key={note.uid} {...note} />
 				))}
