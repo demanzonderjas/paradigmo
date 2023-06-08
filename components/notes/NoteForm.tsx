@@ -52,7 +52,7 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 
 	return (
 		<form className="flex flex-auto flex-col gap-5 max-w-2xl px-4">
-			<div className="fields text-black flex flex-start flex-auto justify-center gap-5 flex-wrap">
+			<div className="fields text-black flex flex-start flex-col flex-auto justify-center gap-5 flex-wrap">
 				<RichTextField value={note} setValue={setNote} />
 				<input
 					className="w-full p-2"
