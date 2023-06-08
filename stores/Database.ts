@@ -24,6 +24,7 @@ export class Database {
 			getNote: action.bound,
 			updateNote: action.bound,
 			getMine: action.bound,
+			deleteNote: action.bound,
 		});
 	}
 
@@ -108,6 +109,16 @@ export class Database {
 			.ref(`notes/${this.auth.user.uid}`)
 			.once("value")
 			.then((s: any) => s.val());
+	}
+
+	async deleteNote(note: TNote) {
+		if (!note.uid) {
+			return;
+		}
+		await Promise.all(
+			note.tags.map((tag) => this.database.ref(`tags_notes/${tag.uid}/${note.uid}`).remove())
+		);
+		await this.database.ref(`notes/${this.auth.user.uid}/${note.uid}`).remove();
 	}
 }
 

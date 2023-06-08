@@ -11,7 +11,7 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 	const [note, setNote] = useState("");
 	const [source, setSource] = useState("");
 	const [tags, setTags] = useState<TTag[]>([]);
-	const { addNote, updateNote, addTag } = useNotes();
+	const { addNote, updateNote, addTag, deleteNote } = useNotes();
 	const { push } = useRouter();
 
 	const handleSubmit = async () => {
@@ -37,6 +37,11 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 		setTags(tags.filter((t) => t.uid !== uid));
 	};
 
+	const handleDelete = async () => {
+		await deleteNote({ ...seed, tags });
+		push("/");
+	};
+
 	useEffect(() => {
 		if (seed) {
 			setNote(seed.text || "");
@@ -60,6 +65,7 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 				<TagList tags={tags} removeTag={removeTag} />
 			</div>
 			<Button text={seed ? "Update note" : "Add note"} onClick={handleSubmit} />
+			{seed && <Button text="Delete note" onClick={handleDelete} theme="danger" />}
 		</form>
 	);
 };

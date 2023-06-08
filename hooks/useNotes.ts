@@ -13,5 +13,6 @@ export function useNotes() {
 		getNote: database.getNote,
 		updateNote: database.updateNote,
 		getMine: database.getMine,
+		deleteNote: database.deleteNote,
 	};
 }

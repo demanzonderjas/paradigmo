@@ -14,3 +14,18 @@ h1 {
 	font-size: 3.5em;
 	margin-bottom: 0.5em;
 }
+
+ul, ol
+{
+    list-style: initial;
+    margin: initial;
+    padding: 0 0 0 40px;
+}
+ol {
+	list-style: decimal;
+}
+
+li
+{
+    display: list-item;
+}
