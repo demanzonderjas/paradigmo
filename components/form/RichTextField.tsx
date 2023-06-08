@@ -12,6 +12,7 @@ const joditConfig = {
 	buttonsXS: listOfButtons,
 	textAlign: "left",
 	width: "100%",
+	hidePoweredByJodit: true,
 };
 
 export const RichTextField: React.FC<{ value: string; setValue: Function }> = ({
