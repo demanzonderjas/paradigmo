@@ -1,22 +1,36 @@
 import { useEffect, useState } from "react";
 import { useNotes } from "@/hooks/useNotes";
-import { TNote, TTag } from "@/typings/notes";
+import { TListItem, TNote, TTag } from "@/typings/notes";
 import { Button } from "../form/Button";
 import { TagAutocomplete } from "../tags/TagAutocomplete";
 import { TagList } from "../tags/TagList";
 import { useRouter } from "next/router";
 import { RichTextField } from "../form/RichTextField";
 import { DateString } from "../layout/DateString";
+import { Icon } from "../layout/Icon";
+import uuid from "uniqid";
+
+const createNewListItem = (): TListItem => {
+	return { uid: uuid(), text: "" };
+};
 
 export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 	const [note, setNote] = useState("");
 	const [source, setSource] = useState("");
 	const [tags, setTags] = useState<TTag[]>([]);
+	const [showList, setShowList] = useState<boolean>(!!seed && !!seed.list);
+	const [checklist, setChecklist] = useState<TListItem[]>([createNewListItem()]);
 	const { addNote, updateNote, addTag, deleteNote } = useNotes();
 	const { push } = useRouter();
 
 	const handleSubmit = async () => {
-		const noteData: TNote = { text: note, tags, source, timestamp: Date.now() };
+		const noteData: TNote = {
+			text: note,
+			tags,
+			source: source || null,
+			timestamp: Date.now(),
+			list: checklist ? checklist.filter((item) => !!item.text) : null,
+		};
 		if (seed) {
 			await updateNote(seed, noteData);
 			push(`/notes/view/${seed.uid}`);
@@ -24,6 +38,11 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 			const uid = await addNote(noteData);
 			push(`/notes/view/${uid}`);
 		}
+	};
+
+	const addListItem = () => {
+		const item = createNewListItem();
+		setChecklist([...checklist, item]);
 	};
 
 	const addTagToNote = async ({ name, uid }: TTag) => {
@@ -43,11 +62,23 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 		push("/");
 	};
 
+	const updateItem = (uid: string, text: string) => {
+		const itemIndex = checklist.findIndex((item) => item.uid === uid);
+		const items = [...checklist];
+		items[itemIndex] = { ...items[itemIndex], text };
+		setChecklist(items);
+	};
+
+	const removeItem = (uid: string) => {
+		setChecklist(checklist.filter((t) => t.uid !== uid));
+	};
+
 	useEffect(() => {
 		if (seed) {
 			setNote(seed.text || "");
 			setSource(seed.source || "");
 			setTags(seed.tags || []);
+			setChecklist(seed.list || [createNewListItem()]);
 		}
 	}, [seed]);
 
@@ -58,6 +89,42 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 					<DateString timestamp={seed ? seed.timestamp : Date.now()} />
 				</div>
 				<RichTextField value={note} setValue={setNote} />
+				<div className="show-list">
+					<Icon evenOdd={true} handleClick={() => setShowList(!showList)}>
+						<path
+							d="m10.5 17.25c0-.414.336-.75.75-.75h10c.414 0 .75.336.75.75s-.336.75-.75.75h-10c-.414 0-.75-.336-.75-.75zm-1.5-3.55c0-.53-.47-1-1-1h-5c-.53 0-1 .47-1 1v4.3c0 .53.47 1 1 1h5c.53 0 1-.47 1-1zm-5.5.5h4v3.3h-4zm7-2.2c0-.414.336-.75.75-.75h10c.414 0 .75.336.75.75s-.336.75-.75.75h-10c-.414 0-.75-.336-.75-.75zm-1.5-6c0-.53-.47-1-1-1h-5c-.53 0-1 .47-1 1v4.3c0 .53.47 1 1 1h5c.53 0 1-.47 1-1zm-5.5.5h4v3.3h-4zm7 .25c0-.414.336-.75.75-.75h10c.414 0 .75.336.75.75s-.336.75-.75.75h-10c-.414 0-.75-.336-.75-.75z"
+							fillRule="nonzero"
+						/>
+					</Icon>
+					{showList && (
+						<div className="checklist flex flex-col gap-2 my-4">
+							<div className="items flex flex-col gap-2">
+								{checklist.map((item) => (
+									<div className="item flex gap-2 items-center" key={item.uid}>
+										<div className="checkbox flex border-2 border-white w-8 h-8"></div>
+										<div className="text w-full flex-auto">
+											<input
+												className="p-1 w-full flex-auto"
+												type="text"
+												value={item.text}
+												onChange={(e) =>
+													updateItem(item.uid, e.target.value)
+												}
+											/>
+										</div>
+										<Button
+											text="X"
+											size="small"
+											onClick={() => removeItem(item.uid)}
+											theme="danger"
+										/>
+									</div>
+								))}
+							</div>
+							<Button text="Add item" onClick={addListItem} />
+						</div>
+					)}
+				</div>
 				<input
 					className="w-full p-2"
 					placeholder="source"
