@@ -2,8 +2,8 @@ import { useNotes } from "@/hooks/useNotes";
 import { TNote } from "@/typings/notes";
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
-import { Note } from "./Note";
 import { useUser } from "@/hooks/useUser";
+import { NoteList } from "./NoteList";
 
 export const Mine: React.FC = observer(() => {
 	const [notes, setNotes] = useState<TNote[]>([]);
@@ -20,11 +20,5 @@ export const Mine: React.FC = observer(() => {
 		})();
 	}, [user]);
 
-	return (
-		<div className="notes flex flex-wrap justify-center gap-2">
-			{notes.map((note) => (
-				<Note key={note.uid} {...note} />
-			))}
-		</div>
-	);
+	return <NoteList notes={notes} />;
 });

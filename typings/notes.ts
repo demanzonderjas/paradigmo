@@ -3,6 +3,7 @@ export type TNote = {
 	tags: TTag[];
 	uid?: string;
 	source?: string;
+	timestamp?: number;
 };
 
 export type TTag = {

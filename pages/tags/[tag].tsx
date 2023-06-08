@@ -1,5 +1,5 @@
 import { Page } from "@/components/layout/Page";
-import { Note } from "@/components/notes/Note";
+import { NoteList } from "@/components/notes/NoteList";
 import { useNotes } from "@/hooks/useNotes";
 import { TNote, TTag } from "@/typings/notes";
 import { useRouter } from "next/router";
@@ -26,11 +26,7 @@ export default function Tag() {
 
 	return (
 		<Page title={tag.name}>
-			<div className="notes flex flex-wrap justify-center gap-2">
-				{notes.map((note) => (
-					<Note key={note.uid} {...note} />
-				))}
-			</div>
+			<NoteList notes={notes} />
 		</Page>
 	);
 }

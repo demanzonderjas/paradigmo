@@ -15,11 +15,12 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 	const { push } = useRouter();
 
 	const handleSubmit = async () => {
+		const noteData: TNote = { text: note, tags, source, timestamp: Date.now() };
 		if (seed) {
-			await updateNote(seed, { text: note, tags, source });
+			await updateNote(seed, noteData);
 			push(`/notes/view/${seed.uid}`);
 		} else {
-			const uid = await addNote({ text: note, tags, source });
+			const uid = await addNote(noteData);
 			push(`/notes/view/${uid}`);
 		}
 	};
