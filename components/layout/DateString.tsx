@@ -5,7 +5,8 @@ export const DateString: React.FC<{ timestamp: number }> = ({ timestamp }) => {
 
 	return (
 		<span>
-			{date.getDate()}-{date.getMonth()}-{date.getFullYear()}
+			{date.getDate()}-{date.getMonth()}-{date.getFullYear()} {date.getHours()}:
+			{date.getMinutes()}
 		</span>
 	);
 };

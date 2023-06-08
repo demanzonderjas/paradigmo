@@ -6,6 +6,7 @@ import { TagAutocomplete } from "../tags/TagAutocomplete";
 import { TagList } from "../tags/TagList";
 import { useRouter } from "next/router";
 import { RichTextField } from "../form/RichTextField";
+import { DateString } from "../layout/DateString";
 
 export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 	const [note, setNote] = useState("");
@@ -53,6 +54,9 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 	return (
 		<form className="flex flex-auto flex-col gap-5 max-w-2xl px-4">
 			<div className="fields text-black flex flex-start flex-col flex-auto justify-center gap-5 flex-wrap">
+				<div>
+					<DateString timestamp={seed ? seed.timestamp : Date.now()} />
+				</div>
 				<RichTextField value={note} setValue={setNote} />
 				<input
 					className="w-full p-2"
