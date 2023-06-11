@@ -13,7 +13,7 @@ export const TagList: React.FC<{ tags: TTag[]; hasLinks?: boolean; removeTag?: F
 				<div
 					className={`tag flex items-stretch justify-center ${
 						hasLinks
-							? "cursor-pointer hover:bg-black hover:text-white transition-transform hover:scale-125"
+							? "cursor-pointer hover:bg-black hover:text-white transition-transform hover:scale-110"
 							: ""
 					}`}
 					key={index}

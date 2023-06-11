@@ -22,7 +22,7 @@ export function Icon({
 				viewBox="0 0 24 24"
 				fillRule={evenOdd ? "evenodd" : null}
 				clipRule={evenOdd ? "evenodd" : null}
-				className="h-full w-full"
+				className="h-full w-full flex"
 			>
 				{children}
 			</svg>

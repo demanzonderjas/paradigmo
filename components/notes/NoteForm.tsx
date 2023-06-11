@@ -9,6 +9,7 @@ import { RichTextField } from "../form/RichTextField";
 import { DateString } from "../layout/DateString";
 import { Icon } from "../layout/Icon";
 import uuid from "uniqid";
+import { Checklist } from "../checklist/Checklist";
 
 const createNewListItem = (): TListItem => {
 	return { uid: uuid(), text: "" };
@@ -79,6 +80,9 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 			setSource(seed.source || "");
 			setTags(seed.tags || []);
 			setChecklist(seed.list || [createNewListItem()]);
+			if (seed.list) {
+				setShowList(true);
+			}
 		}
 	}, [seed]);
 
@@ -98,29 +102,11 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 					</Icon>
 					{showList && (
 						<div className="checklist flex flex-col gap-2 my-4">
-							<div className="items flex flex-col gap-2">
-								{checklist.map((item) => (
-									<div className="item flex gap-2 items-center" key={item.uid}>
-										<div className="checkbox flex border-2 border-white w-8 h-8"></div>
-										<div className="text w-full flex-auto">
-											<input
-												className="p-1 w-full flex-auto"
-												type="text"
-												value={item.text}
-												onChange={(e) =>
-													updateItem(item.uid, e.target.value)
-												}
-											/>
-										</div>
-										<Button
-											text="X"
-											size="small"
-											onClick={() => removeItem(item.uid)}
-											theme="danger"
-										/>
-									</div>
-								))}
-							</div>
+							<Checklist
+								list={checklist}
+								handleDelete={removeItem}
+								handleChange={updateItem}
+							/>
 							<Button text="Add item" onClick={addListItem} />
 						</div>
 					)}

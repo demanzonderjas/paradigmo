@@ -14,5 +14,6 @@ export function useNotes() {
 		updateNote: database.updateNote,
 		getMine: database.getMine,
 		deleteNote: database.deleteNote,
+		setChecked: database.setChecked,
 	};
 }

@@ -1,7 +1,7 @@
 export type TNote = {
 	text?: string;
 	list?: TListItem[];
-	checked?: string;
+	checked?: string[];
 	tags: TTag[];
 	uid?: string;
 	source?: string;

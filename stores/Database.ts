@@ -25,6 +25,7 @@ export class Database {
 			updateNote: action.bound,
 			getMine: action.bound,
 			deleteNote: action.bound,
+			setChecked: action.bound,
 		});
 	}
 
@@ -119,6 +120,10 @@ export class Database {
 			note.tags.map((tag) => this.database.ref(`tags_notes/${tag.uid}/${note.uid}`).remove())
 		);
 		await this.database.ref(`notes/${this.auth.user.uid}/${note.uid}`).remove();
+	}
+
+	setChecked(noteUid: string, checked: string[]) {
+		return this.database.ref(`notes/${this.auth.user.uid}/${noteUid}/checked`).set(checked);
 	}
 }
 
