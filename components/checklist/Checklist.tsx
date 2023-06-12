@@ -35,7 +35,7 @@ export const Checklist: React.FC<{
 						onClick={isCheckable ? () => updateChecklist(item.uid) : undefined}
 						className={`checkbox flex border-2 ${
 							handleChange ? "border-white" : "border-black"
-						} w-8 h-8 ${isChecked(item.uid) ? "bg-black" : ""} `}
+						} w-8 h-7 ${isChecked(item.uid) ? "bg-black" : ""} `}
 					/>
 					<div className="text w-full flex-auto">
 						{handleChange ? (

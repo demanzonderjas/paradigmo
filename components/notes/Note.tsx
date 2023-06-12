@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { DateString } from "../layout/DateString";
 import { Checklist } from "../checklist/Checklist";
 import { Icon } from "../layout/Icon";
+import { isLink } from "../../utils/validation";
 
 export const Note: React.FC<TNote> = (note) => {
 	const { push } = useRouter();
@@ -34,7 +35,15 @@ export const Note: React.FC<TNote> = (note) => {
 				</Icon>
 			</div>
 			<div className="flex justify-between wrap bg-orange text-white text-xs px-4 py-1">
-				<div className="source">{note.source}</div>
+				<div className="source">
+					{isLink(note.source) ? (
+						<a href={note.source} target="_blank">
+							{note.source}
+						</a>
+					) : (
+						note.source
+					)}
+				</div>
 				<div className="timestamp">
 					<DateString timestamp={note.timestamp} />
 				</div>
