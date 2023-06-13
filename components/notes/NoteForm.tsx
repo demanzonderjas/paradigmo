@@ -31,6 +31,7 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 			source: source || null,
 			timestamp: Date.now(),
 			list: checklist ? checklist.filter((item) => !!item.text) : null,
+			checked: seed && seed.checked ? seed.checked : null,
 		};
 		if (seed) {
 			await updateNote(seed, noteData);
