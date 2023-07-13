@@ -6,7 +6,7 @@ export function Page({ title, children }: { title: string; children?: any }) {
 	return (
 		<>
 			<Head>
-				<title>{title} - Paradigmo</title>
+				<title>{`${title} - Paradigmo`}</title>
 			</Head>
 			<Menu />
 			<h1>{title}</h1>
