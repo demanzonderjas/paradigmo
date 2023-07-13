@@ -10,6 +10,7 @@ import { DateString } from "../layout/DateString";
 import { Icon } from "../layout/Icon";
 import uuid from "uniqid";
 import { Checklist } from "../checklist/Checklist";
+import { prefixWithZeroBelow10 } from "../../utils/datetime";
 
 const createNewListItem = (): TListItem => {
 	return { uid: uuid(), text: "" };
@@ -18,6 +19,7 @@ const createNewListItem = (): TListItem => {
 export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 	const [note, setNote] = useState("");
 	const [source, setSource] = useState("");
+	const [timestamp, setTimestamp] = useState(Date.now());
 	const [tags, setTags] = useState<TTag[]>([]);
 	const [showList, setShowList] = useState<boolean>(!!seed && !!seed.list);
 	const [checklist, setChecklist] = useState<TListItem[]>([createNewListItem()]);
@@ -29,7 +31,7 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 			text: note,
 			tags,
 			source: source || null,
-			timestamp: Date.now(),
+			timestamp,
 			list: checklist ? checklist.filter((item) => !!item.text) : null,
 			checked: seed && seed.checked ? seed.checked : null,
 		};
@@ -80,6 +82,7 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 			setNote(seed.text || "");
 			setSource(seed.source || "");
 			setTags(seed.tags || []);
+			setTimestamp(seed.timestamp || Date.now());
 			setChecklist(seed.list || [createNewListItem()]);
 			if (seed.list) {
 				setShowList(true);
@@ -87,11 +90,30 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 		}
 	}, [seed]);
 
+	const convertToTimestamp = (value: string) => {
+		console.log(new Date(value).getTime());
+		setTimestamp(new Date(value).getTime());
+	};
+
+	const convertToDate = (value: number) => {
+		const date = new Date(value);
+		return `${date.getFullYear()}-${prefixWithZeroBelow10(
+			date.getMonth() + 1
+		)}-${date.getDate()}T${prefixWithZeroBelow10(date.getHours())}:${prefixWithZeroBelow10(
+			date.getMinutes()
+		)}`;
+	};
+
 	return (
 		<form className="flex flex-auto flex-col gap-5 max-w-2xl px-4">
 			<div className="fields text-black flex flex-start flex-col flex-auto justify-center gap-5 flex-wrap">
 				<div>
-					<DateString timestamp={seed ? seed.timestamp : Date.now()} />
+					<input
+						className="py-1 px-2"
+						type="datetime-local"
+						value={convertToDate(timestamp)}
+						onChange={(e) => convertToTimestamp(e.target.value)}
+					/>
 				</div>
 				<RichTextField value={note} setValue={setNote} />
 				<div className="show-list">

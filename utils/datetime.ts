@@ -8,3 +8,7 @@ export const getDateFromKey = (key: string) => {
 	}
 	return new Date(timestamp);
 };
+
+export const prefixWithZeroBelow10 = (number: number) => {
+	return number >= 10 ? number : `0${number}`;
+};
