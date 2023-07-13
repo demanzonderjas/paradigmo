@@ -99,9 +99,9 @@ export const NoteForm: React.FC<{ seed?: TNote }> = ({ seed }) => {
 		const date = new Date(value);
 		return `${date.getFullYear()}-${prefixWithZeroBelow10(
 			date.getMonth() + 1
-		)}-${date.getDate()}T${prefixWithZeroBelow10(date.getHours())}:${prefixWithZeroBelow10(
-			date.getMinutes()
-		)}`;
+		)}-${prefixWithZeroBelow10(date.getDate())}T${prefixWithZeroBelow10(
+			date.getHours()
+		)}:${prefixWithZeroBelow10(date.getMinutes())}`;
 	};
 
 	return (

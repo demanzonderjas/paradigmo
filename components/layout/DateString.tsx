@@ -6,8 +6,9 @@ export const DateString: React.FC<{ timestamp: number }> = ({ timestamp }) => {
 
 	return (
 		<span>
-			{date.getDate()}-{prefixWithZeroBelow10(date.getMonth() + 1)}-{date.getFullYear()}{" "}
-			{prefixWithZeroBelow10(date.getHours())}:{prefixWithZeroBelow10(date.getMinutes())}
+			{prefixWithZeroBelow10(date.getDate())}-{prefixWithZeroBelow10(date.getMonth() + 1)}-
+			{date.getFullYear()} {prefixWithZeroBelow10(date.getHours())}:
+			{prefixWithZeroBelow10(date.getMinutes())}
 		</span>
 	);
 };
